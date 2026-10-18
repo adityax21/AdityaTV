@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cinema — TV Home</title>
+<style>
+:root{--bg:#080a10;--panel:#141824;--muted:#a9afbf;--accent:#9b8cff;--white:#f7f8fc}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;background:var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif}
+body{overflow-x:hidden}
+.app{min-height:100vh;background:radial-gradient(ellipse at 72% 0%,#27213e 0%,transparent 38%),linear-gradient(180deg,#0a0c13,#080a10 72%)}
+.topbar{height:78px;display:flex;align-items:center;gap:32px;padding:0 5.2%;position:sticky;top:0;z-index:5;background:linear-gradient(#090b12f2,#090b12c9);backdrop-filter:blur(14px)}
+.logo{font-size:25px;font-weight:800;letter-spacing:-1.2px;margin-right:18px}.logo span{color:var(--accent)}
+nav{display:flex;gap:26px;align-items:center;flex:1}nav button,.top-actions button{background:none;border:0;color:#b7bdcc;font-size:15px;font-weight:650;padding:10px 0;cursor:pointer}
+nav button.active,nav button:focus{color:white;border-bottom:3px solid var(--accent);outline:none}
+.top-actions{display:flex;align-items:center;gap:18px}.round{border:1px solid #ffffff24!important;border-radius:50%;width:38px;height:38px;font-size:17px!important;color:white!important}
+.profile{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#9b8cff,#e69cbe);display:grid;place-items:center;font-weight:800;color:#171321}
+.hero{margin:8px 4.3% 24px;height:clamp(300px,39vw,480px);min-height:300px;border-radius:22px;overflow:hidden;position:relative;background:#1d2536 url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1800&q=85') center 45%/cover;box-shadow:0 18px 60px #0007}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#070910f5 0%,#070910c9 37%,#07091030 75%),linear-gradient(0deg,#080a10 0%,transparent 44%)}
+.hero-content{position:absolute;left:5%;top:15%;width:48%;max-width:620px}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:2.3px;color:#c6bcff;font-weight:800}.hero h1{font-size:clamp(34px,4.1vw,60px);line-height:.99;letter-spacing:-2px;margin:14px 0 16px}.hero p{font-size:clamp(13px,1.2vw,17px);line-height:1.55;color:#d0d3df;max-width:490px;margin:0 0 22px}
+.meta{font-size:13px;color:#c7cad5;margin-bottom:22px}.pill{border:1px solid #ffffff30;border-radius:5px;padding:4px 7px;margin:0 6px;font-size:11px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}.action{border:0;border-radius:8px;padding:13px 19px;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px}.primary{background:#f5f4ff;color:#11111a}.secondary{background:#ffffff1a;color:white;border:1px solid #ffffff25}.action:focus,.app-card:focus,.poster:focus,.row-title:focus{outline:3px solid #b4a8ff;outline-offset:3px;transform:scale(1.035)}
+.content{padding:0 5.2% 40px}.section{margin:25px 0 30px}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}.section h2{font-size:20px;letter-spacing:-.4px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}.seeall{background:none;border:0;color:#bcb1ff;font-weight:700;cursor:pointer}
+.apps{display:grid;grid-template-columns:repeat(7,minmax(90px,1fr));gap:12px}
+.app-card{height:86px;border-radius:13px;border:1px solid #ffffff14;background:linear-gradient(145deg,#1d2231,#11141e);display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:.18s;min-width:0}
+.app-card:hover,.app-card:focus{background:#262b3d}.app-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:16px;font-weight:900;color:white;flex-shrink:0}
+.app-name{font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prime{background:#13a8d3}.hotstar{background:linear-gradient(135deg,#172b86,#b13bde)}.sony{background:linear-gradient(135deg,#ed4a8b,#5431b8)}.youtube{background:#f32938}.netflix{background:#171717;color:#ed1b2f}.zee{background:#4a8c37}.browser{background:#f1f4ff;color:#4385f5}
+.posters{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(145px,1fr);gap:14px;overflow-x:auto;padding:4px 3px 12px;scrollbar-width:thin;scrollbar-color:#36394c transparent}
+.poster{border:0;background:#141824;padding:0;border-radius:11px;overflow:hidden;text-align:left;cursor:pointer;position:relative;color:white;transition:transform .18s;min-width:0}
+.poster img{display:block;width:100%;aspect-ratio:2/2.75;object-fit:cover;background:#202638}
+.poster .poster-info{padding:10px 10px 12px}.poster-title{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.poster-meta{font-size:11px;color:#aeb4c4;margin-top:5px}
+.wide-poster{grid-auto-columns:minmax(240px,1.45fr)}.wide-poster .poster img{aspect-ratio:16/9}
+.empty{display:none;color:#aeb4c4;padding:25px;background:#111520;border-radius:10px}
+.footer{padding:22px 5.2% 35px;color:#737b8e;font-size:12px;border-top:1px solid #ffffff10}
+.modal{position:fixed;inset:0;background:#000b;z-index:20;display:none;align-items:center;justify-content:center;padding:24px}.modal.open{display:flex}.dialog{width:min(720px,95vw);background:#171b29;border:1px solid #ffffff20;border-radius:18px;overflow:hidden;box-shadow:0 24px 90px #000b}.dialog img{width:100%;height:240px;object-fit:cover;display:block;opacity:.8}.dialog-body{padding:22px}.dialog h2{margin:0 0 10px}.dialog p{color:#c1c6d4;line-height:1.5}.close{float:right;border:0;background:#ffffff18;color:white;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:18px}
+.searchbar{display:none;padding:10px 5.2% 16px}.searchbar.open{display:block}.searchbar input{width:100%;padding:14px 16px;border-radius:10px;border:1px solid #ffffff24;background:#151927;color:white;font-size:16px;outline:none}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#f3f1ff;color:#161321;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:750;display:none;z-index:30}
+@media(max-width:900px){.topbar{gap:16px;padding:0 4%}nav{gap:14px}.apps{grid-template-columns:repeat(4,minmax(80px,1fr))}.app-card{height:72px}.app-name{font-size:12px}.hero-content{width:60%}.content{padding-left:4%;padding-right:4%}}
+@media(max-width:560px){.topbar{height:auto;min-height:65px;flex-wrap:wrap;padding:12px 4%}.logo{font-size:22px}nav{order:3;width:100%;overflow:auto}.top-actions{margin-left:auto}.hero{margin:4px 3% 18px;height:340px}.hero-content{width:83%;top:12%}.hero h1{font-size:37px}.hero p{font-size:13px}.apps{grid-template-columns:repeat(2,minmax(0,1fr))}.app-card{justify-content:flex-start;padding:0 12px}.posters{grid-auto-columns:145px}.wide-poster{grid-auto-columns:230px}.section h2{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="logo">cinema<span>+</span></div>
+  <nav aria-label="Main navigation">
+    <button class="active" data-nav="Home">Home</button><button data-nav="Movies">Movies</button><button data-nav="Shows">Shows</button><button data-nav="Live TV">Live TV</button><button data-nav="Apps">Apps</button>
+  </nav>
+  <div class="top-actions"><button class="round" id="searchBtn" aria-label="Search">⌕</button><div class="profile">A</div></div>
+</header>
+<div class="searchbar" id="searchbar"><input id="searchInput" placeholder="Search movies, shows and apps…" autocomplete="off"></div>
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">Tonight's featured pick</div>
+    <h1>Stories worth<br>staying in for.</h1>
+    <div class="meta">Featured collection <span class="pill">4K</span><span class="pill">CINEMATIC</span></div>
+    <p>Your next favourite is waiting. Explore acclaimed films, unforgettable series and the apps you already love — all from one beautiful screen.</p>
+    <div class="actions"><button class="action primary" id="exploreBtn">▶ &nbsp; Explore titles</button><button class="action secondary" id="savedBtn">＋ &nbsp; My watchlist</button></div>
+  </div>
+</section>
+<main class="content">
+  <section class="section" id="appsSection">
+    <div class="section-head"><div><h2>Your apps</h2><div class="sub">Quick access to your streaming services</div></div><button class="seeall" data-nav="Apps">All apps ↗</button></div>
+    <div class="apps">
+      <button class="app-card" data-app="Prime Video"><span class="app-icon prime">prime</span><span class="app-name">Prime Video</span></button>
+      <button class="app-card" data-app="Disney+ Hotstar"><span class="app-icon hotstar">✦</span><span class="app-name">Hotstar</span></button>
+      <button class="app-card" data-app="Sony LIV"><span class="app-icon sony">LIV</span><span class="app-name">Sony LIV</span></button>
+      <button class="app-card" data-app="YouTube"><span class="app-icon youtube">▶</span><span class="app-name">YouTube</span></button>
+      <button class="app-card" data-app="Netflix"><span class="app-icon netflix">N</span><span class="app-name">Netflix</span></button>
+      <button class="app-card" data-app="ZEE5"><span class="app-icon zee">ZEE</span><span class="app-name">ZEE5</span></button>
+      <button class="app-card" data-app="Browser"><span class="app-icon browser">◎</span><span class="app-name">Browser</span></button>
+    </div>
+  </section>
+  <section class="section" id="trendingSection">
+    <div class="section-head"><div><h2>Popular right now</h2><div class="sub">A few ideas for your next movie night</div></div><button class="seeall" data-nav="Movies">Explore →</button></div>
+    <div class="posters" id="popular">
+      <button class="poster" data-title="The Grand Journey" data-description="A breathtaking journey across distant worlds, where an unlikely crew discovers that home is more than a place." data-image="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=900&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80" alt=""><div class="poster-info"><div class="poster-title">The Grand Journey</div><div class="poster-meta">Adventure · 2025</div></div></button>
+      <button class="poster" data-title="Midnight City" data-description="One night. One city. A mystery that changes everything." data-image="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=600&q=80" alt=""><div class="poster-info"><div class="poster-title">Midnight City</div><div class="poster-meta">Thriller · 2025</div></div></button>
+      <button class="poster" data-title="Into the Wild" data-description="A quiet, visually rich story about taking the long road and finding a new perspective." data-image="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=900&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=600&q=80" alt=""><div class="poster-info"><div class="poster-title">Into the Wild</div><div class="poster-meta">Drama · 2024</div></div></button>
+      <button class="poster" data-title="Beyond the Blue" data-description="An ocean expedition reveals a world of wonder beneath the waves." data-image="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80" alt=""><div class="poster-info"><div class="poster-title">Beyond the Blue</div><div class="poster-meta">Documentary · 2024</div></div></button>
+      <button class="poster" data-title="Neon Dreams" data-description="A stylish city adventure set against glowing streets and a pulsing soundtrack." data-image="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=600&q=80" alt=""><div class="poster-info"><div class="poster-title">Neon Dreams</div><div class="poster-meta">Sci-fi · 2025</div></div></button>
+      <button class="poster" data-title="The Last Summit" data-description="A team faces its toughest climb yet in this story of courage and friendship." data-image="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80" alt=""><div class="poster-info"><div class="poster-title">The Last Summit</div><div class="poster-meta">Adventure · 2024</div></div></button>
+    </div>
+  </section>
+  <section class="section" id="showsSection">
+    <div class="section-head"><div><h2>Series to get lost in</h2><div class="sub">Long stories. Great characters.</div></div><button class="seeall" data-nav="Shows">See all →</button></div>
+    <div class="posters wide-poster">
+      <button class="poster" data-title="Hidden Worlds" data-description="A new discovery opens the door to an extraordinary world." data-image="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt=""><div class="poster-info"><div class="poster-title">Hidden Worlds</div><div class="poster-meta">Series · 2 seasons</div></div></button>
+      <button class="poster" data-title="The Long Road" data-description="Every stop brings a new story, and every story brings them closer." data-image="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt=""><div class="poster-info"><div class="poster-title">The Long Road</div><div class="poster-meta">Series · New episodes</div></div></button>
+      <button class="poster" data-title="Earth, Reimagined" data-description="A spectacular look at the planet and the forces that shape it." data-image="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1000&q=80"><img loading="lazy" src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=700&q=80" alt=""><div class="poster-info"><div class="poster-title">Earth, Reimagined</div><div class="poster-meta">Documentary series</div></div></button>
+    </div>
+  </section>
+  <section class="section" id="watchlistSection">
+    <div class="section-head"><div><h2>My watchlist</h2><div class="sub">Titles you save will appear here</div></div></div>
+    <div class="posters" id="watchlist"></div><div class="empty" id="emptyWatchlist">Your watchlist is empty. Select a title and choose “Add to watchlist”.</div>
+  </section>
+</main>
+<footer class="footer">cinema+ · A personal TV dashboard concept. Streaming apps and services open separately when supported by your TV.</footer>
+</div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><img id="modalImage" src="" alt=""><div class="dialog-body"><button class="close" id="closeModal" aria-label="Close">×</button><div class="eyebrow">Discover</div><h2 id="modalTitle">Title</h2><p id="modalDescription"></p><div class="actions"><button class="action primary" id="addWatchlist">＋ Add to watchlist</button><button class="action secondary" id="modalDone">Close</button></div></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let selectedTitle=null; const saved=new Map();
+function toast(msg){const t=$("#toast");t.textContent=msg;t.style.display="block";clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display="none",2400)}
+function openTitle(card){selectedTitle={title:card.dataset.title,description:card.dataset.description,image:card.dataset.image,meta:card.querySelector(".poster-meta")?.textContent||""};$("#modalTitle").textContent=selectedTitle.title;$("#modalDescription").textContent=selectedTitle.description;$("#modalImage").src=selectedTitle.image;$("#modal").classList.add("open");$("#addWatchlist").textContent=saved.has(selectedTitle.title)?"✓ Saved to watchlist":"＋ Add to watchlist";$("#closeModal").focus()}
+function renderWatchlist(){const list=$("#watchlist");list.innerHTML="";saved.forEach((item,title)=>{const b=document.createElement("button");b.className="poster";b.dataset.title=item.title;b.dataset.description=item.description;b.dataset.image=item.image;b.innerHTML=`<img src="${item.image}" alt=""><div class="poster-info"><div class="poster-title">${item.title}</div><div class="poster-meta">Saved for later</div></div>`;b.addEventListener("click",()=>openTitle(b));list.appendChild(b)});$("#emptyWatchlist").style.display=saved.size?"none":"block"}
+function closeModal(){$("#modal").classList.remove("open")}
+$$(".poster").forEach(card=>card.addEventListener("click",()=>openTitle(card)));
+$("#closeModal").addEventListener("click",closeModal);$("#modalDone").addEventListener("click",closeModal);
+$("#addWatchlist").addEventListener("click",()=>{if(!selectedTitle)return;if(saved.has(selectedTitle.title)){saved.delete(selectedTitle.title);toast("Removed from watchlist")}else{saved.set(selectedTitle.title,selectedTitle);toast("Added to watchlist")}renderWatchlist();$("#addWatchlist").textContent=saved.has(selectedTitle.title)?"✓ Saved to watchlist":"＋ Add to watchlist"});
+$("#modal").addEventListener("click",e=>{if(e.target===$("#modal"))closeModal()});
+$("#searchBtn").addEventListener("click",()=>{$("#searchbar").classList.toggle("open");if($("#searchbar").classList.contains("open"))$("#searchInput").focus()});
+$("#searchInput").addEventListener("input",e=>{const q=e.target.value.toLowerCase();$$(".poster").forEach(p=>{p.style.display=(!q||p.dataset.title?.toLowerCase().includes(q)||p.textContent.toLowerCase().includes(q))?"":"none"});$$(".app-card").forEach(a=>a.style.display=(!q||a.dataset.app.toLowerCase().includes(q))?"":"none")});
+$("#exploreBtn").addEventListener("click",()=>$("#trendingSection").scrollIntoView({behavior:"smooth"}));
+$("#savedBtn").addEventListener("click",()=>$("#watchlistSection").scrollIntoView({behavior:"smooth"}));
+const appLinks={"YouTube":"https://www.youtube.com/","Prime Video":"https://www.primevideo.com/","Disney+ Hotstar":"https://www.hotstar.com/","Sony LIV":"https://www.sonyliv.com/","Netflix":"https://www.netflix.com/","ZEE5":"https://www.zee5.com/","Browser":"https://www.google.com/"};
+$$(".app-card").forEach(b=>b.addEventListener("click",()=>{const name=b.dataset.app;toast("Opening "+name+" if supported by your TV…");window.open(appLinks[name],"_blank")}));
+$$("[data-nav]").forEach(b=>b.addEventListener("click",()=>{const tab=b.dataset.nav;$$("nav button").forEach(n=>n.classList.toggle("active",n.dataset.nav===tab));if(tab==="Home")window.scrollTo({top:0,behavior:"smooth"});else if(tab==="Apps")$("#appsSection").scrollIntoView({behavior:"smooth"});else if(tab==="Movies")$("#trendingSection").scrollIntoView({behavior:"smooth"});else if(tab==="Shows")$("#showsSection").scrollIntoView({behavior:"smooth"});else toast("Live TV: open your TV's Live TV app from the home screen.")}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"||e.key==="Backspace"){closeModal();$("#searchbar").classList.remove("open")}});
+renderWatchlist();
+</script>
+</body>
+</html>
